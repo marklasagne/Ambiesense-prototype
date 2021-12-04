@@ -2,7 +2,7 @@
 Ambie-sense video player
 */
 
-
+let video;
 //////////////// WEBSOCKET ////////////////
 // connects to local ws server 
 // saves the data from all incoming messages
@@ -18,21 +18,26 @@ socket.addEventListener("open", function (event) {
 // listen for messages
 socket.addEventListener("message", function (event) {
   console.log('scene changed: ', event.data);
-  loadScene(data)
-  video.play();
+  data = JSON.parse(event.data); 
+  removeElements();
+  data = JSON.parse(event.data); 
+  // if off then do not load another video, else load new video
+  data.name == 'off' ? console.log('scene turned off') : loadScene(data)
 });
 
 
 //////////////// Load Video ////////////////
 // using p5js load video based on the websocket message
 // the video is set to the displays width and height and overflow is hidden
-let video;
-
 function loadScene(data) {
     let title = data.name
-    createCanvas(0, 0);
     video = createVideo([`./videos/${title}.mp4`, `./videos/${title}.webm`]);
     video.size(displayWidth, displayHeight);
     video.loop();
+    video.autoplay();
 };
+
+function setup() {
+    createCanvas(0, 0);
+}
 
