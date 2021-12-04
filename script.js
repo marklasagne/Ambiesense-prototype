@@ -1,10 +1,14 @@
-let vid;
+/* 
+Ambie-sense video player
+*/
 
-// create WebSocket connection
+
+//////////////// WEBSOCKET ////////////////
+// connects to local ws server 
+// saves the data from all incoming messages
+// uses the data to reload the scene 
+// create WebSocket connection 
 const socket = new WebSocket("ws://localhost:8082");
-let color = '#000'; 
-
-let data = {'name': 'rainforest'}
 
 // log the connection opened
 socket.addEventListener("open", function (event) {
@@ -14,21 +18,21 @@ socket.addEventListener("open", function (event) {
 // listen for messages
 socket.addEventListener("message", function (event) {
   console.log('scene changed: ', event.data);
-  data = event.data.toString();
+  loadScene(data)
+  video.play();
 });
+
+
+//////////////// Load Video ////////////////
+// using p5js load video based on the websocket message
+// the video is set to the displays width and height and overflow is hidden
+let video;
 
 function loadScene(data) {
     let title = data.name
     createCanvas(0, 0);
-    vid = createVideo([`./videos/${title}.mp4`, `./videos/${title}.webm`]);
-    vid.size(displayWidth, displayHeight);
-    vid.loop();
+    video = createVideo([`./videos/${title}.mp4`, `./videos/${title}.webm`]);
+    video.size(displayWidth, displayHeight);
+    video.loop();
 };
 
-function setup() {
-    loadScene(data)
-  }
-
-  function mousePressed() {
-    vid.play();
-  }
