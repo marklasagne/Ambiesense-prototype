@@ -13,30 +13,33 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
     </head>
     <body>
-        <h1>Hello World!</h1>
         <script>
-            // Create WebSocket connection.
-            const socket = new WebSocket("ws://localhost:8082");
-            let color = '#000'; 
-
-            // Connection opened
-            socket.addEventListener("open", function (event) {
-            console.log('p5js connected');
-            });
-
-            // Listen for messages
-            socket.addEventListener("message", function (event) {
-            console.log('color changed: ', event.data);
-            color = event.data.toString();
-            });
+            let vid;
+            let playing = false;
+            let completion;
 
             function setup() {
-            createCanvas(400, 400);
+                createCanvas(400, 100) 
+                vid = createVideo(['./videos/rain.mp4', './videos/rain.webm']);
+                vid.size(400, 300);
+                }
+                
+            function draw() {
+                background(50);
+                completion = vid.time() / vid.duration();
+                ellipse(completion*width, 50, 20, 20);
+            }
+            function mousePressed() {
+                if (!playing) {
+                    vid.play();
+                    vid.time((mouseX/width) * vid.duration());
+                    playing = true;
+                } else {
+                    vid.pause();
+                    playing = false;
+                }
             }
 
-            function draw() {
-            background(color);
-            }
         </script>
     </body>
 </html>

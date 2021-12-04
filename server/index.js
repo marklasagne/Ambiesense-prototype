@@ -7,7 +7,6 @@ const WebSocket = require("ws");
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-
 wss.on("connection", (ws) => {
     // log that a client connected 
     console.log('new client connected');
