@@ -8,13 +8,12 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws) => {
-    // log that a client connected 
     console.log('new client connected');
 
     ws.on('message', (message) => {
         console.log('recieved: ' + message.toString());
 
-        // for now just send out to all clients
+        // sending to all open clients
         wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(message.toString());
